@@ -1,0 +1,8 @@
+node_modules/
+config/config.env
+config/default.json
+config/development.json
+config/production.json
+_data/
+tbd
+# seeder.js

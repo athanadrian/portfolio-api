@@ -12,7 +12,18 @@ exports.getBlogs = asyncHandler(async (req, res, next) => {
   const blogs = await Blog.find({ status: 'published' }).sort({
     createdAt: -1,
   });
-  return res.json(blogs);
+  const { access_token } = await getAccessToken();
+  const blogsWithUsers = [];
+  const authors = {};
+
+  for (let blog of blogs) {
+    const author =
+      authors[blog.userId] || (await getAuth0User(access_token)(blog.userId));
+    authors[author.user_id] = author;
+    blogsWithUsers.push({ blog, author });
+  }
+
+  return res.json(blogsWithUsers);
 });
 
 //@desc         Get user blogs
@@ -20,7 +31,10 @@ exports.getBlogs = asyncHandler(async (req, res, next) => {
 //@access       Private Admin
 exports.getBlogsByUser = async (req, res) => {
   const userId = req.user.sub;
-  const blogs = await Blog.find({ userId });
+  const blogs = await Blog.find({
+    userId,
+    status: { $in: ['draft', 'published'] },
+  });
   return res.json(blogs);
 };
 
@@ -41,58 +55,17 @@ exports.getBlogById = asyncHandler(async (req, res, next) => {
 //@desc         Get single blog by slug
 //@route        GET /api/v1/blogs/s/:slug
 //@access       Public
-// exports.getBlogBySlug = async (req, res) => {
-//   // const blog = await Blog.findOne({ slug: req.params.slug });
-//   // getAccessToken((error, data) => {
-//   //   console.log('token data', data);
-//   // });
-//   // return res.json(blog);
-//   // exports.getBlogBySlug = (req, res) => {
-//   const slug = req.params.slug;
-
-//   Blog.findOne({ slug }, function async(err, foundBlog) {
-//     if (err) {
-//       return res.status(422).send(err);
-//     }
-//     // getAccessToken((error, data) => {
-//     //   console.log('token data', data);
-//     //   return res.json(foundBlog);
-//     // });
-//     const { access_token } = await getAccessToken();
-//     const user = await getAuth0User(access_token)(blog.userId)
-//     return res.json(foundBlog);
-
-//   });
-// };
-//};
 exports.getBlogBySlug = async (req, res) => {
   const blog = await Blog.findOne({ slug: req.params.slug });
-  // getAccessToken((error, data) => {
-  //   return res.json(blog);
-  // });
   const { access_token } = await getAccessToken();
-  const user = await getAuth0User(access_token)(blog.userId);
+  const author = await getAuth0User(access_token)(blog.userId);
 
-  return res.json({ blog, user });
+  return res.json({ blog, author });
 };
 
 // //@desc         Create blog
 // //@route        POST /api/v1/blogs
 // //@access       Private admin
-// exports.createBlog = asyncHandler(async (req, res, next) => {
-//   req.body.userId = req.user.sub;
-//   const blog = await Blog.create(req.body);
-
-//   if (!blog) {
-//     return next(new ErrorResponse(`Something went wrong`), 500);
-//   }
-
-//   res.status(200).json({
-//     success: true,
-//     data: blog,
-//   });
-// });
-
 exports.createBlog = async (req, res) => {
   const blogData = req.body;
   blogData.userId = req.user.sub;

@@ -30,7 +30,7 @@ server.use(bodyParser.json());
 server.use('/api/v1/portfolios', portfolios);
 server.use('/api/v1/blogs', blogs);
 
-const PORT = process.env.PORT || 3001;
+const PORT = parseInt(process.env.PORT, 10) || 3001;
 
 server.listen(PORT, (err) => {
   if (err) console.error('Error listening...', err);

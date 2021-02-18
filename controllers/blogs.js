@@ -2,6 +2,7 @@ const Blog = require('../db/models/Blog');
 const slugify = require('slugify');
 const uniqueSlug = require('unique-slug');
 const asyncHandler = require('../middleware/async');
+const { getAccessToken, getAuth0User } = require('../middleware/auth');
 const ErrorResponse = require('../utils/errorResponse');
 
 //@desc         Get all blogs
@@ -38,18 +39,42 @@ exports.getBlogById = asyncHandler(async (req, res, next) => {
 });
 
 //@desc         Get single blog by slug
-//@route        GET /api/v1/blogs/:slug
+//@route        GET /api/v1/blogs/s/:slug
 //@access       Public
-exports.getBlogBySlug = asyncHandler(async (req, res, next) => {
-  const blog = await Blog.findOne({ slug: req.params.slug });
+// exports.getBlogBySlug = async (req, res) => {
+//   // const blog = await Blog.findOne({ slug: req.params.slug });
+//   // getAccessToken((error, data) => {
+//   //   console.log('token data', data);
+//   // });
+//   // return res.json(blog);
+//   // exports.getBlogBySlug = (req, res) => {
+//   const slug = req.params.slug;
 
-  if (!blog) {
-    return next(
-      new ErrorResponse(`Blog not found with id ${req.params.id}!`, 404)
-    );
-  }
-  res.status(200).json(blog);
-});
+//   Blog.findOne({ slug }, function async(err, foundBlog) {
+//     if (err) {
+//       return res.status(422).send(err);
+//     }
+//     // getAccessToken((error, data) => {
+//     //   console.log('token data', data);
+//     //   return res.json(foundBlog);
+//     // });
+//     const { access_token } = await getAccessToken();
+//     const user = await getAuth0User(access_token)(blog.userId)
+//     return res.json(foundBlog);
+
+//   });
+// };
+//};
+exports.getBlogBySlug = async (req, res) => {
+  const blog = await Blog.findOne({ slug: req.params.slug });
+  // getAccessToken((error, data) => {
+  //   return res.json(blog);
+  // });
+  const { access_token } = await getAccessToken();
+  const user = await getAuth0User(access_token)(blog.userId);
+
+  return res.json({ blog, user });
+};
 
 // //@desc         Create blog
 // //@route        POST /api/v1/blogs

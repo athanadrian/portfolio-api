@@ -21,6 +21,7 @@
     "jwks-rsa": "^1.12.2",
     "mongoose": "^5.11.16",
     "morgan": "^1.10.0",
+    "request": "^2.88.2",
     "slugify": "^1.4.6",
     "unique-slug": "^2.0.2"
   },

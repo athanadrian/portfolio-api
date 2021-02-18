@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 
 // call routes
 const portfolios = require('./routes/portfolios');
+const blogs = require('./routes/blogs');
 
 // Get env variables
 dotenv.config({ path: './config/config.env' });
@@ -27,6 +28,7 @@ server.use(bodyParser.json());
 
 // Use/Register Routes
 server.use('/api/v1/portfolios', portfolios);
+server.use('/api/v1/blogs', blogs);
 
 const PORT = process.env.PORT || 3001;
 

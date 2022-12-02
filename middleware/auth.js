@@ -1,8 +1,10 @@
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 const request = require('request');
-const config = require('../config');
+//const config = require('../config');
+const dotenv = require('dotenv');
 
+dotenv.config();
 // Authentication middleware
 // This middleware will check access token in authorization headers
 // of a request
@@ -33,13 +35,13 @@ exports.checkRole = (role) => (req, res, next) => {
 exports.getAccessToken = (callback) => {
   const options = {
     method: 'POST',
-    url: config.AUTH0_TOKEN_URL,
+    url: process.env.AUTH0_TOKEN_URL,
     headers: { 'content-type': 'application/json' },
     form: {
       grant_type: 'client_credentials',
-      client_id: config.AUTH0_CLIENT_ID,
-      client_secret: config.AUTH0_CLIENT_SECRET,
-      audience: config.AUTH0_AUDIENCE,
+      client_id: process.env.AUTH0_CLIENT_ID,
+      client_secret: process.env.AUTH0_CLIENT_SECRET,
+      audience: process.env.AUTH0_AUDIENCE,
     },
   };
 

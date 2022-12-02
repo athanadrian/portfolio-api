@@ -1,7 +1,3 @@
-const dotenv = require('dotenv');
-
-dotenv.config();
-
 module.exports = {
   MONGO_URI: process.env.MONGO_URI,
   AUTH0_NAMESPACE: process.env.AUTH0_NAMESPACE,

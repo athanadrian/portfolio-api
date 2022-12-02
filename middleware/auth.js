@@ -1,7 +1,6 @@
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 const request = require('request');
-//const config = require('../config');
 const dotenv = require('dotenv');
 
 dotenv.config();

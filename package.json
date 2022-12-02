@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js",
-    "start":"node index.js",
+    "start": "node index.js",
     "crdb": "node seeder.js -i",
     "rmdb": "node seeder.js -d"
   },
@@ -16,7 +16,7 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "colors": "^1.4.0",
-    "dotenv": "^8.2.0",
+    "dotenv": "^8.6.0",
     "express": "^4.17.1",
     "express-jwt": "^6.0.0",
     "jwks-rsa": "^1.12.2",

@@ -6,4 +6,5 @@ config/development.json
 config/production.json
 _data/
 tbd
+.env
 # seeder.js

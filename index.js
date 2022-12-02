@@ -11,7 +11,7 @@ const portfolios = require('./routes/portfolios');
 const blogs = require('./routes/blogs');
 
 // Get env variables
-dotenv.config({ path: './config/config.env' });
+dotenv.config();
 
 //Connect to database
 connectDB();
